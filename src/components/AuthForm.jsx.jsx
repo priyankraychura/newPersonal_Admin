@@ -101,18 +101,23 @@ const AuthForm = () => {
     setIsLoading(true);
     const otpPromise = clientAPI.post(`/sendOTP`, { email: resetForm.email })
 
-    toast.promise(otpPromise, {
-      loading: 'Sending OTP...',
-      success: (response) => {
-        setIsLoading(false);
-        setMode('verifyOtp'); // Switch mode on success
-        return <b>{response?.data?.msg}</b>;
-      },
-      error: (error) => {
-        setIsLoading(false);
-        return <b>{error.response.data.error}</b>;
-      }
-    });
+    try {
+      toast.promise(otpPromise, {
+        loading: 'Sending OTP...',
+        success: (response) => {
+          setIsLoading(false);
+          setMode('verifyOtp'); // Switch mode on success
+          return <b>{response?.data?.msg}</b>;
+        },
+        error: (error) => {
+          setIsLoading(false);
+          return <b>{error.response.data.error}</b>;
+        }
+      });
+    } catch (error) {
+      console.log("🚀 ~ handleSendOtp ~ error:", error)
+      setIsLoading(false);
+    }
   };
 
   const handleVerifyOtp = () => {
